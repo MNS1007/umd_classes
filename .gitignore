@@ -1,0 +1,36 @@
+# Global ignores for umd_classes repo
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info
+.build/
+.dist/
+.python-version
+
+# Virtual environments
+venv/
+.venv/
+env/
+*/venv/
+*/.venv/
+
+# Data + cache dumps
+*.csv
+*.parquet
+*.npy
+*.npz
+*.h5
+*.pkl
+store-sales-time-series-forecasting/
+data/
+logs/
+.ipynb_checkpoints/
+
+# System files
+.DS_Store
+.idea/
+.vscode/
+
+# Local notebooks outputs
+*.nbconvert.ipynb

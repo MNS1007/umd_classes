@@ -1,0 +1,54 @@
+#!/bin/bash
+#SBATCH --job-name=rsf_gru
+#SBATCH --output=logs/rsf_gru_%j.out
+#SBATCH --error=logs/rsf_gru_%j.err
+#SBATCH --time=08:00:00
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=96G
+#SBATCH --gres=gpu:rtxa4000:1
+#SBATCH --partition=cml-scavenger
+#SBATCH --account=cml-scavenger
+#SBATCH --qos=cml-scavenger
+
+set -euo pipefail
+
+PROJECT_ROOT="$HOME/Documents/umd_classes/class_project/MSML610/Fall2025/projects/UmdTask77_Retail_Sales_Forecasting_with_LSTMs"
+DATA_ROOT="/cmlscratch/$USER/store-sales-time-series-forecasting"
+VENV_PATH="$HOME/.venvs/rsf/bin/activate"
+
+if [ -f "$VENV_PATH" ]; then
+  # shellcheck disable=SC1090
+  source "$VENV_PATH"
+else
+  echo "Missing virtualenv at $VENV_PATH" >&2
+  exit 1
+fi
+
+mkdir -p "$PROJECT_ROOT/logs"
+cd "$PROJECT_ROOT"
+
+echo "Starting Retail Sales Forecasting (GRU) run..."
+echo "Date: $(date)"
+echo "Host: $(hostname)"
+echo "Job ID: $SLURM_JOB_ID"
+
+python -m retail_sales_forecasting_with_lstms.example \
+  --data-root "$DATA_ROOT" \
+  --cell-type gru \
+  --epochs 40 \
+  --batch-size 192 \
+  --hidden-size 192 \
+  --num-layers 3 \
+  --dropout-rate 0.15 \
+  --learning-rate 2e-4 \
+  --weight-decay 1e-4 \
+  --gradient-clip 1.0 \
+  --lookback-days 168 \
+  --horizon-days 28 \
+  --train-ratio 0.85 \
+  --include-external-regressors \
+  --metrics mae rmse mape
+
+echo "Completed run at $(date)"

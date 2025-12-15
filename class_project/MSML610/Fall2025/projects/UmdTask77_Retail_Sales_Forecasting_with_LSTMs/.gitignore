@@ -1,0 +1,27 @@
+# Python artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info
+.pytest_cache/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Data outputs
+store-sales-time-series-forecasting/
+data/
+*.csv
+*.parquet
+*.npy
+*.npz
+
+# Logs
+logs/
+
+# Jupyter
+.ipynb_checkpoints/
+
